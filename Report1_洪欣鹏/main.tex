@@ -1,0 +1,108 @@
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage[top=1in,bottom=1in,left=1.25in,right=1.25in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{times,bitmetr}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage{mdwmath}
+\usepackage{mdwtab}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{anysize}
+\usepackage{subfigure}
+\usepackage{pifont}
+\usepackage{color}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{tabu}
+\bibliographystyle{IEEEtran}
+
+
+
+\title{Research Report One}
+\author{Xinpeng Hong
+	\thanks{The author acknowledges the support of wavelab in
+		making this project a reality}\\
+	\\\\
+}
+
+
+
+% Change to the current month of the series
+\reportmonth{September 24}
+% Change to the current year of the series
+\reportyear{2019}
+% Change to the TR number that you obtained from the
+% UWEETR web pages when you initially created a new
+% TR number. Only provide the last 4 digits here, the year
+% goes in the \reportyear{} field above.
+\reportnumber{0001}
+
+
+
+\begin{document}
+\makecover
+\maketitle
+	
+\section{背景知识学习}
+\noindent DNN(深度神经网络), CNN(卷积神经网络), RNN(循环神经网络), LSTM(长短期记忆网络), GAN(生成式对抗网络), RL(强化学习)
+
+\section{主体报告阅读}
+\subsection{标题}
+\noindent GAN+RL For Anomaly Detection
+\subsection{摘要}
+\noindent Web服务器流量异常检测是一个时间序列分类问题。\\
+由于异常样本只占总样本的很小一部分，传统分类方法不能很好解决这类问题。\\
+异常类型分三种：上下文异常(contextual anomaly)、点异常(point anomaly)和集合异常(collective anomaly)。\\
+异常可能同时包含全局模式和局部模式，前者更容易识别，后者更难检测。\\
+本文设计了一个用于异常检测的深度学习模型(CLSTM)，对数据进行预处理以避免数据不平衡。在此基础上提出了一种结合CLSTM、GAN和RL的数据集异常检测新模型。
+\subsection{背景}
+\noindent K-means、随机森林、支持向量机等不能正确分类和正常数据相同分布的异常数据。\\
+LSTM等RNN能较好处理具有周期性的数据，但如果数据没有周期性则性能会大大降低。\\
+CNN能提取序列数据映射成多维图像的空间特征，但对于时间序列数据，时间信息会在卷积和池化操作中丢失。\\\\	\\
+CLSTM对于数据不平衡问题做得不好，比如训练集中只含有少量正样本(不正常的样本)。\\
+GAN能生成正常数据的值分布，我们能通过真实样本和学习到的分布的差异进行异常评估。Houssam等通过将测试数据和生成数据转换为潜在空间对异常进行评估，但是对时间序列的数据表现不佳。最著名的处理时间序列的GAN模型为SeqGAN，但其针对的数据是离散的，能构造一个字典来存储所有单词，而有些特征是连续的，因此SeqGAN不能用于异常检测。\\
+结论：CLSTM在提取时空特征方面做得很好，GAN在学习数据价值效率分布方面做得很好，二者结合可以做得更好。
+\subsection{模型}
+\noindent Generator: C-LSTM 见论文\\
+Overall Model: GAN+RL 见论文\\
+Discriminator: DNN 见论文\\
+Defination: 见论文
+\subsection{训练}
+\noindent 在对判别器进行更新的时候，存在多个损失函数来衡量两个分布之间的差异，如cross entropy、JS divergence、Wasserstein distance等。这里我们使用Wassertein distance更新discriminator。\\
+Algorithm: GAN+RL for AD network 见论文。\\
+对CLSTM分类器进行预训练，让它学习如何对正常数据序列进行分类，但是由于只有很少正样本，某些异常序列在训练前的CLSTM网络工作中能取得较高分数，在GAN中需要对CLSTM中不变的参数进行修正，更新噪声到生成数据的神经网络参数，这样能保证生成器生成真实的网络流量序列。
+\subsection{异常评估}
+\noindent CLSTM分类器只能判断某数据序列是否包含异常数据，评估的时候只关注测试数据集中的序列。\\
+GAN网络，discriminator不能区分正常数据和异常数据，generator中CLSTM分类器也不能，GAN评估不关注测试数据序列，而是比较差异。\\
+评估的两个标准：设置特定的基准得分和将猜测的异常数据在整个数据集中所占的最高百分比作为异常值。后者更为适用。
+\subsection{实验}
+\noindent 数据集：Yahoo S5 Webscope\\
+预处理：滑动窗口算法\\
+LSTM+DNN\\\\\\
+CNN+DNN\\
+CNN+LSTM+DNN 见论文\\
+GAN+RL 见论文
+\subsection{结论}
+\noindent 优点：在具有时间和空间特征的数据集上使用GAN+RL方法取得了很好的结果。\\
+缺点：很难拟合和训练；参数更新是通过梯度下降来完成的，因此较大奖励可能不会导致较大的梯度变化；即使导致了较大梯度变化，它也有可能与generator返回的动作相矛盾，模型可能永远不会收敛。\\
+改进：提高鲁棒性，使适用于更多数据集。
+
+\section{参考文献阅读}
+\noindent Houssam Zenati, Chuan-Sheng Foo, ”Efficient GAN-Based Anomaly Detection”, Workshop Track, ICLR, 2018: 生成式对抗网络(GANs)能够对真实数据的复杂高维分布进行建模，这表明它可以有效地进行异常检测。然而，很少有研究探讨GANs在异常检测任务中的应用。这篇文章利用最近开发的GAN模型进行异常检测，并在图像和网络入侵数据集上实现了最先进的性能，同时在测试时比唯一发布的基于GAN的方法快数百倍。\\
+Tae-Young Kim, Sung-Bae Cho, ”Web traffic anomaly detection using C- LSTM neural networks”, Expert Systems With Applications 106 (2018) 6676, 2018: 这篇文章提出了一种C-LSTM神经网络，用于对一维时间序列信号中的交通数据进行有效的时空信息建模。实验表明，C-LSTM方法结合了传统的神经网络(CNN)、长短时记忆(LSTM)和深度神经网络(DNN)，可以提取出更复杂的特征。利用CNN层降低空间信息的频率变化；LSTM层适用于时间信息的建模；DNN层用于将数据映射到更可分离的空间。C-LSTM方法对于web流量数据也实现了近乎完美的异常检测性能，即使对于非常相似的信号，以前认为是非常难以分类的。\\
+Lantao Yu, Weinan Zhang, ”SeqGAN: Sequence Generative Adversarial Nets with Policy Gradient”, AAAI, 2017: 当目标是生成离散标记序列时，GAN有一定的限制，一个主要原因是生成模型的离散输出使得梯度难以从判别模型更新到生成模型。此外，判别模型只能对一个完整的序列进行评价，而对于一个部分生成的序列，一旦生成了整个序列，平衡它当前的分数和未来的分数是非常重要的。在这篇文章中提出了一个序列生成框架SeqGAN来解决这些问题。将数据生成器建模为RL中的一个随机策略，SeqGAN通过直接执行梯度策略更新，绕过了生成器的微分问题。RL奖励信号来自于一个完整序列判断的GAN识别器，并通过蒙特卡罗搜索返回到中间状态-动作步骤。\\\\\\\\\\
+Bachman, P., and Precup, D., ”Data generation as sequential decision making”, NIPS, 32493257, 2015i: 通过广泛类别的生成模型对顺序决策的共同依赖来连接它们，对现有模型进行扩展，然后在数据输入的背景下进一步探索这一想法——这可能是研究传统生成模型和条件生成模型之间关系的最简单的设置。将数据输入定义为一个MDP，并开发能够表示其有效策略的模型。利用神经网络建立模型，并利用引导策略搜索对模型进行训练，模型通过反馈和细化的迭代过程生成预测。结果表明，该方法能有效地解决不同难度、不同数据集之间的归算问题。\\
+Bengio, S.; Vinyals, O.; Jaitly, N.; and Shazeer,N., ”Scheduled sampling for sequence prediction with recurrent neural networks”, NIPS, 11711179, 2015: 可以训练RNN生成给定输入的标记序列。当前训练它们的方法包括在给定当前(递归)状态和前一个令牌的序列中最大化每个标记的可能性。在推断时，未知的先前标记将被模型本身生成的标记替换。训练和推断之间的这种差异会产生错误，这些错误会沿着生成的序列迅速累积。这篇文章提出了一种课程学习策略，以温和地改变训练过程，从使用真正的前一个标记的完全引导方案，到使用生成的标记的较少的引导方案。	\\
+Chunting Zhou, Chonglin Sun, ”A C-LSTM Neural Network for Text Classification”, November 2015:结合卷积神经网络(CNN)和递归神经网络(RNN)这两种体系结构的优点，提出了一种新的统一的句子表示和文本分类模型C-LSTM。C-LSTM利用CNN提取一系列高级短语重述语句，并将其输入长短时记忆递归神经网络(LSTM)中，得到句子的表示形式。C-LSTM既能捕捉短语的局部特征，又能捕捉句子的全局和时态特征。实验结果表明，C-LSTM算法的性能优于CNN和LSTM算法。
+
+\section{个人想法计划}
+\noindent 依次实现LSTM+DNN、CNN+DNN、CNN+LSTM+DNN，证明CNN+LSTM+DNN的分类性能最好。\\
+实现CNN+LSTM+GAN+RL，证明其能避免数据不均衡问题，性能相对于不会利用时空信息的benchmark模型会更好。\\
+Policy Gradient算法可能使模型永不收敛或只能收敛到局部最优而非全局最优，可以试试Deterministic Policy Gradient算法和Deep Deterministic Policy Gradient算法。\\
+更换其他数据集进行测试。
+	
+\end{document}
