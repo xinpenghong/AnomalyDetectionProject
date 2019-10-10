@@ -1,0 +1,192 @@
+% **************************************************
+% Document Class Definition
+% **************************************************
+\documentclass[%
+	paper=A4,					% paper size --> A4 is default in Germany
+	twoside=false,				% onesite or twoside printing
+	%openright,					% doublepage cleaning ends up right side
+	parskip=half,				% spacing value / method for paragraphs
+	chapterprefix=true,			% prefix for chapter marks
+	11pt,						% font size
+	headings=normal,			% size of headings
+	%bibliography=totoc,			% include bib in toc
+	%listof=totoc,				% include listof entries in toc
+	titlepageon,				% own page for each title page
+	%captions=belowfigure,		% display table captions above the float env
+	draft=false,				% value for draft version
+]{scrreprt}%
+\usepackage{ctex}
+\usepackage{indentfirst}
+\usepackage{booktabs}
+
+% **************************************************
+% Debug LaTeX Information
+% **************************************************
+%\listfiles
+
+% **************************************************
+% Information and Commands for Reuse
+% **************************************************
+\newcommand{\thesisSubTitle}{\heiti \bfseries DAM Homework 3}
+\newcommand{\thesisTitle}{\textsf{Part I: Mining on Mobile Phone Signal}}
+\newcommand{\thesisName}{\textit{Author: \textbf{Sun Tao} (1652175)\\[0.1cm] Supervisor:  \textbf{Prof. Weixiong Rao}}}
+\newcommand{\thesisSubject}{Documentation}
+\newcommand{\thesisDate}{\today}
+\newcommand{\thesisVersion}{1}
+
+
+% **************************************************
+% Load and Configure Packages
+% **************************************************
+\usepackage[utf8]{inputenc}		% defines file's character encoding
+\usepackage[english]{babel} % babel system, adjust the language of the content
+\usepackage[					% clean thesis style
+	figuresep=colon,%
+	sansserif=false,%
+	hangfigurecaption=false,%
+	hangsection=true,%
+	hangsubsection=true,%
+	colorize=full,%
+	colortheme=bluemagenta,%
+	bibsys=bibtex,%
+	bibfile=bib-refs,%
+	bibstyle=alphabetic,%
+]{cleanthesis}
+
+\hypersetup{					% setup the hyperref-package options
+	pdftitle={\thesisTitle},	% 	- title (PDF meta)
+	pdfsubject={\thesisSubject},% 	- subject (PDF meta)
+	pdfauthor={\thesisName},	% 	- author (PDF meta)
+	plainpages=false,			% 	-
+	colorlinks=false,			% 	- colorize links?
+	pdfborder={0 0 0},			% 	-
+	breaklinks=true,			% 	- allow line break inside links
+	bookmarksnumbered=true,		%
+	bookmarksopen=true			%
+}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fontspec}
+\usepackage{tikz}
+\usepackage{wrapfig}
+\usepackage{floatrow}
+\usepackage{multirow}
+\usepackage[justification=centering]{caption}
+%\newfontfamily\menlo{Menlo} %Menlo
+%\newfontfamily\cons{Consolas}
+%\newfontfamily\moki{mononoki}
+\lstset{
+    numbers=left,
+    tabsize=4,
+    numberstyle= \footnotesize, 
+    frame=shadowbox, % 阴影效果
+    rulesepcolor= \color{ red!20!green!20!blue!20} ,
+    escapeinside=``, % 英文分号中可写入中文
+    xleftmargin=2em,xrightmargin=0em, aboveskip=1em,
+    framexleftmargin=2em,    
+    columns=fixed,         
+    numbers=left,                                        % 在左侧显示行号  
+    %frame=none,                                          % 不显示背景边框  
+    backgroundcolor=\color[RGB]{252,250,249},            % 设定背景颜色  
+    keywordstyle=\bfseries \color[RGB]{30,30,190},                 % 设定关键字颜色  
+    numberstyle=\footnotesize\color{darkgray},           % 设定行号格式  
+    commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式  
+    stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式  
+    showstringspaces=false,                              % 不显示字符串中的空格    
+    otherkeywords={string, Type, NULL, None},
+    basicstyle=\footnotesize\menlo ,
+}
+\usepackage{caption}
+
+\DeclareCaptionFont{white}{ \color{black} }
+\DeclareCaptionFormat{listing}{
+	\centering #1#2#3
+%  \colorbox[cmyk]{0.43, 0.35, 0.35,0.01 }{
+%    \parbox{\textwidth}{\hspace{15pt}#1#2#3}
+%  }
+}
+\captionsetup[lstlisting]{ format=listing, labelfont=white, textfont=white, singlelinecheck=false, margin=0, font={bf,small} }
+
+% ...
+
+%\lstinputlisting[caption=My caption]{sourcefile.lang}
+
+\geometry{a4paper,scale=0.99}
+
+% **************************************************
+% Document CONTENT
+% **************************************************
+\begin{document}
+
+% --------------------------
+% rename document parts
+% --------------------------
+%\renewcaptionname{ngerman}{\figurename}{Abb.}
+%\renewcaptionname{ngerman}{\tablename}{Tab.}
+\renewcaptionname{english}{\figurename}{Fig}
+\renewcaptionname{english}{\tablename}{Tab.}
+
+% --------------------------
+% Front matter
+% --------------------------
+\pagenumbering{roman}			% roman page numbing (invisible for empty page style)
+\pagestyle{empty}				% no header or footers
+\input{content/titlepages}		% INCLUDE: all titlepages
+%\cleardoublepage
+
+%\pagestyle{plain}				% display just page numbers
+%\input{content/abstract}		% INCLUDE: the abstracts (english and german)
+%\cleardoublepage
+%
+%\input{content/acknowledgement} % INCLUDE: acknowledgement
+%\cleardoublepage
+%
+\newgeometry{top=1cm,bottom=1cm}
+\setcounter{tocdepth}{2}		% define depth of toc
+\tableofcontents				% display table of contents
+\restoregeometry
+%\cleardoublepage
+
+% --------------------------
+% Body matter
+% --------------------------
+\pagenumbering{arabic}			% arabic page numbering
+\setcounter{page}{2}			% set page counter
+\pagestyle{maincontentstyle} 	% fancy header and footer
+
+\input{content/doc.tex}
+
+
+
+
+% --------------------------
+% Back matter
+% --------------------------
+{%
+\setstretch{1.1}
+\renewcommand{\bibfont}{\normalfont\small}
+\setlength{\biblabelsep}{0pt}
+\setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip}
+\printbibliography[nottype=online]
+\printbibliography[heading=subbibliography,title={Webseiten},type=online,prefixnumbers={@}]
+}
+%\cleardoublepage
+%
+%\listoffigures
+%\cleardoublepage
+%
+%\listoftables
+%\cleardoublepage
+%
+%%\input{content/colophon}
+%%\cleardoublepage
+%
+%%\input{content/declaration}
+%\clearpage
+%\newpage
+%\mbox{}
+
+% **************************************************
+% End of Document CONTENT
+% **************************************************
+\end{document}
