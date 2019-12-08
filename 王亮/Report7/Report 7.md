@@ -77,6 +77,8 @@ fc(sigmoid)
 
 ### Threshold:
 
+#### 方案一：以最小值作为阈值
+
 最终训练完的模型，所有正常数据输入discriminator，输出的所有值的最小值min(normal_data_score)
 
 
@@ -100,7 +102,7 @@ Number of wrongly classified data is:  (8540, 1)
 
 
 
-~~结果分析：~~
+~~结果数据特征分析：~~
 
 ~~正常序列的判别器分数范围：~~
 
@@ -122,6 +124,8 @@ Number of wrongly classified data is:  (8540, 1)
 
 
 
+#### 方案二：以平均值作为阈值
+
 如果取平均值作为阈值：
 
 0.5151243
@@ -130,3 +134,36 @@ Number of wrongly classified data is:  (2874, 1)
 
 准确率：66%
 
+
+
+
+
+第二次实验：
+
+0.5331911
+Number of correctly classified data is:  (4752, 1)
+Number of wrongly classified data is:  (3804, 1)
+
+准确率：55%
+
+
+
+0.51932955
+
+生成数据
+
+Number of correctly classified data is:  (859, 1)
+Number of wrongly classified data is:  (141, 1)
+
+异常数据
+
+Number of correctly classified data is:  (4798, 1)
+Number of wrongly classified data is:  (3758, 1)
+
+
+
+#### 方案三：以中位数作为阈值
+
+0.5089022
+Number of correctly classified data is:  (4604, 1)
+Number of wrongly classified data is:  (3952, 1)
