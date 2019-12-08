@@ -74,7 +74,7 @@ A2～A4: 合成数据，且合成的复杂程度越来越高。A2、A3只有离�
 
 
 
-正常数据的基本特征：稳定的周期性特征+噪声（周期性特征可能是多个周期函数的叠加）
+正常数据的基本特征：稳定的周期性特征+噪声
 
 异常数据：离群点+变化点。离群点也是对于context而言，不一定是数值过大过小，而是偏离了本应遵循的周期性规律。变化点可能是更高级的异常，更难被检测。
 
@@ -129,14 +129,34 @@ D. Anomaly Windows
 
 `train_gan.py` 源码阅读
 
-过程：
+- C-LSTM被封装在generator
 
-加载配置
+- EMA
 
-预训练
+    - tf.train.ExponentialMovingAverage(decay, steps)
+
+        tf.train.ExponentialMovingAverage这个函数用于更新参数，就是采用滑动平均的方法更新参数。这个函数初始化需要提供一个衰减速率（decay），用于控制模型的更新速度。这个函数还会维护一个影子变量（也就是更新参数后的参数值），这个影子变量的初始值就是这个变量的初始值，影子变量值的更新方式如下：
 
 
 
-疑问：
+**过程：**
 
-预训练过程里用到的 clstm_classifier 的作用？
+- [x] 加载配置
+
+- [x] 预训练
+
+- [ ] 对抗训练
+
+
+
+**疑问：**
+
+预训练过程里用到的 clstm_classifier 的作用？ 似乎是没用的
+
+Latent_dim需要比window_size小吗？ self.latent_dim **=** 32
+
+损失函数 generator_loss **=** tf.losses.sigmoid_cross_entropy(tf.constant(1, **shape****=**[batch_size]), fake_d,
+
+​                                                     **scope****=**'generator_loss') ***** fake_loss
+
+Generate_fake_sample 第三层的unit应该是window_size？
