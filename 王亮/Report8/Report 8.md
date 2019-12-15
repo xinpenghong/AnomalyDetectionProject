@@ -47,8 +47,6 @@ Purpose:
 
 A. Feature Generation using Sliding Windows
 
-特征工程？
-
 特征向量的格式：不是简单的滑窗，而是为每个滑窗位置生成一个特征向量：a bias item + L previous instance（倒序）
 $$
 \vec{x}_{k}=\left(1, y_{k}, y_{k-1}, \dots, y_{k-\ell+1}\right)^{T}
@@ -160,3 +158,24 @@ Latent_dim需要比window_size小吗？ self.latent_dim **=** 32
 ​                                                     **scope****=**'generator_loss') ***** fake_loss
 
 Generate_fake_sample 第三层的unit应该是window_size？
+
+
+
+
+
+下周：
+
+STL: seasonal-trend decomposition procedure based on Loess
+
+分析Yahoo数据集数据的周期特征（参考上述论文第4页图）
+
+
+
+比较：
+
+- 与其他方法
+
+- 在自己方法内部
+
+- 其他数据集
+    - [NAB](https://github.com/numenta/NAB)/[data](https://github.com/numenta/NAB/tree/master/data)/**realAWSCloudwatch**/
